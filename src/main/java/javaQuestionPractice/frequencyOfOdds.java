@@ -1,6 +1,6 @@
 package javaQuestionPractice;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
+
 
 import java.util.*;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class frequencyOfOdds {
-    public static void main(String args[]){
+    public static void main(String[] args){
     List<Integer> intList=Arrays.asList(1,2,4,7,3,7,3,7);
     System.out.println(freqOdd(intList));
 }
