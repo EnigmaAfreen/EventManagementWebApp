@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import EventManagementDashBoard from "./EventManagementDashBoard";
+
 // import "CSS/app.css";
 
 const LoginPage = () => {
@@ -11,6 +13,11 @@ const LoginPage = () => {
     userType: "admin",
   });
   const navigate = useNavigate();
+
+  const [admin, setAdmin] = useState(false);
+  console.log(admin);
+  const [participant, setParticipant] = useState(false);
+  console.log(participant);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,12 +38,35 @@ const LoginPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("User Registered:", formData);
+    const adminFlow = formData.userType === "admin";
+    const participantFlow = formData.userType === "participant";
 
-    // Determine if adminFlow should be true or false
-    const adminFlow = formData.userType === "admin"; // Example condition for admin flow
+    if (adminFlow) {
+      setAdmin(true);
+    }
+    if (participantFlow) {
+      setParticipant(true);
+    }
 
-    navigate("/eventDashBoard", { state: { user: formData, adminFlow } });
+    //  else {
+    //   setAdmin(false);
+    // }
   };
+
+  if (admin) {
+    return <EventManagementDashBoard admin={"true"} />;
+  }
+  if (participant) {
+    return <EventManagementDashBoard participant={"true"} />;
+  }
+
+  // Example condition for admin flow
+
+  //  navigate("/eventDashBoard", { state: { user: formData, adminFlow } });
+
+  // } else {
+  //   return <EventManagementDashBoard admin={"false"} />;
+  // }
 
   return (
     <div className="LoginPage">

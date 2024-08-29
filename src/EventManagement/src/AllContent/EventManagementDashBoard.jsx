@@ -4,37 +4,46 @@ import Modal from "./Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { deleteEvent, getAllEvents } from "./eventSlice";
+import CreateEvent from "./CreateEvent";
 // import { getAllEvents } from "./eventSlice";
 
-const EventManagementDashBoard = () => {
+const EventManagementDashBoard = ({ admin, participant }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { allEventData, status } = useSelector((state) => state.event);
   //   const location = useLocation();
-  const [adminFlow, setAdminFlow] = useState(true);
+  // const [adminFlow, setAdminFlow] = useState(admin);
+  const [createEvent, setCreateEvent] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  useEffect(() => {
-    // Access the state passed from the LoginPage
-    const state = location.state || {};
-    console.log("Received location state:", state);
+  // useEffect(() => {
+  //   setAdminFlow(admin);
+  // }, [admin]);
 
-    if (state.adminFlow !== undefined) {
-      setAdminFlow(state.adminFlow);
+  //console.log(adminFlow);
+
+  // useEffect(() => {
+  //   // Access the state passed from the LoginPage
+  //   const state = location.state || {};
+  //   console.log("Received location state:", state);
+
+  //   if (state.adminFlow !== undefined) {
+  //     setAdminFlow(state.adminFlow);
+  //   }
+  // }, [location.state]);
+
+  const handleDeleteEvent = async (name) => {
+    const result = await dispatch(
+      deleteEvent({
+        param: name,
+      })
+    ).unwrap();
+    if (result) {
+      getAll();
     }
-  }, [location.state]);
-
-  //   const handleDeleteEvent = async (eventName) => {
-  //     const result = await dispatch(
-  //       deleteEvent({
-  //         param: eventName,
-  //       })
-  //     ).unwrap();
-  //     if (result) {
-  //       {
-  //         dispatch(getAllEvents());
-  //       }
-  //     }
-  //   };
+  };
 
   const [events, setEvents] = useState([
     {
@@ -80,18 +89,10 @@ const EventManagementDashBoard = () => {
       seatsLeft: 11,
     },
   ]);
-
-  const [selectedEvent, setSelectedEvent] = useState(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
-  //   const fetchEvents = useCallback(() => {
-  //     dispatch(getAllEvents({}));
-  //   }, []);
-
-  useEffect(() => {
+  const getAll = () => {
     dispatch(getAllEvents({}));
-  }, []);
+  };
+  useEffect(() => getAll(), []);
 
   const handleEventClick = (event) => {
     if (event.seatsLeft > 0) {
@@ -124,6 +125,14 @@ const EventManagementDashBoard = () => {
     }
   };
 
+  const handleCreateEvent = () => {
+    console.log("jii");
+    setCreateEvent(true);
+  };
+  if (createEvent) {
+    return <CreateEvent setCreateEvent={setCreateEvent} />;
+  }
+
   return (
     <div className="dashboard">
       <aside className="sidebar">
@@ -145,12 +154,17 @@ const EventManagementDashBoard = () => {
       <div className="main-content">
         <header className="header">
           <h1>Event Dashboard</h1>
-          <button
-            className="add-event-button"
-            onClick={() => navigate("/createEvent")}
-          >
-            Add Event
-          </button>
+          {admin ? (
+            <button
+              className="add-event-button"
+              //onClick={() => navigate("/createEvent")}
+              onClick={handleCreateEvent}
+            >
+              Add Event
+            </button>
+          ) : (
+            ""
+          )}
         </header>
         <div className="event-list">
           {/* {!adminFlow
@@ -170,7 +184,8 @@ const EventManagementDashBoard = () => {
                 </div>
               ))
             : ""} */}
-          {adminFlow ? (
+
+          {admin ? (
             allEventData && allEventData.length > 0 ? (
               allEventData.map((event, index) => (
                 <div
@@ -182,19 +197,21 @@ const EventManagementDashBoard = () => {
                   <p>Location: {event.eventAddress || "No Address"}</p>
                   <p>Description: {event.eventDesc || "No Description"}</p>
                   <div className="button-container">
-                    {/* <button
-                      className="bottom-button"
-                      onClick={handleDeleteEvent(event.eventName)}
-                    >
-                      Delete Event
-                    </button> */}
+                    {
+                      <button
+                        className="bottom-button"
+                        onClick={() => handleDeleteEvent(event["eventName"])}
+                      >
+                        Delete Event
+                      </button>
+                    }
                   </div>
                 </div>
               ))
             ) : (
               <p>No events to display</p>
             )
-          ) : (
+          ) : participant ? (
             events.map((event) => (
               <div
                 className="event-card"
@@ -210,6 +227,8 @@ const EventManagementDashBoard = () => {
                 </p>
               </div>
             ))
+          ) : (
+            ""
           )}
 
           {isModalVisible && selectedEvent && (

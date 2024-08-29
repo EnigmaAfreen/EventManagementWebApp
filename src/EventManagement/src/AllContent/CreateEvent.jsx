@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import { createEvent } from "./eventSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-const CreateEvent = ({ onSubmit }) => {
+const CreateEvent = (props) => {
+  const { setCreateEvent } = props;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -36,7 +38,7 @@ const CreateEvent = ({ onSubmit }) => {
         })
       ).unwrap();
       if (result) {
-        navigate("/eventDashBoard");
+        setCreateEvent(false);
       }
 
       // Handle success (e.g., redirect or show a success message)
@@ -55,7 +57,7 @@ const CreateEvent = ({ onSubmit }) => {
       setErrors(newErrors);
     } else {
       setErrors({});
-      onSubmit(formData);
+      // onSubmit(formData);
       setFormData({
         name: "",
         address: "",
@@ -68,56 +70,59 @@ const CreateEvent = ({ onSubmit }) => {
   return (
     <div className="create-event-form">
       <h2>Create New Event</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="name">Event Name:</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-          />
-          {errors.name && <p className="error">{errors.name}</p>}
-        </div>
-        <div className="form-group">
-          <label htmlFor="address">Event address:</label>
-          <input
-            type="address"
-            id="address"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-          />
-          {errors.address && <p className="error">{errors.address}</p>}
-        </div>
-        <div className="form-group">
-          <label htmlFor="date">Event date:</label>
-          <input
-            type="text"
-            id="date"
-            name="date"
-            value={formData.date}
-            onChange={handleChange}
-          />
-          {errors.date && <p className="error">{errors.date}</p>}
-        </div>
-        <div className="form-group">
-          <label htmlFor="description">Event Description:</label>
-          <textarea
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-          />
-          {errors.description && <p className="error">{errors.description}</p>}
-        </div>
-        <button type="submit" className="submit-button">
-          Create Event
-        </button>
-      </form>
+      {/* <form onSubmit={handleSubmit}> */}
+      <div className="form-group">
+        <label htmlFor="name">Event Name:</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+        />
+        {errors.name && <p className="error">{errors.name}</p>}
+      </div>
+      <div className="form-group">
+        <label htmlFor="address">Event address:</label>
+        <input
+          type="address"
+          id="address"
+          name="address"
+          value={formData.address}
+          onChange={handleChange}
+        />
+        {errors.address && <p className="error">{errors.address}</p>}
+      </div>
+      <div className="form-group">
+        <label htmlFor="date">Event date:</label>
+        <input
+          type="text"
+          id="date"
+          name="date"
+          value={formData.date}
+          onChange={handleChange}
+        />
+        {errors.date && <p className="error">{errors.date}</p>}
+      </div>
+      <div className="form-group">
+        <label htmlFor="description">Event Description:</label>
+        <textarea
+          id="description"
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+        />
+        {errors.description && <p className="error">{errors.description}</p>}
+      </div>
+      <button onClick={handleSubmit} className="submit-button">
+        Create Event
+      </button>
+      {/* </form> */}
     </div>
   );
 };
 
+CreateEvent.propTypes = {
+  setCreateEvent: PropTypes.func,
+};
 export default CreateEvent;
