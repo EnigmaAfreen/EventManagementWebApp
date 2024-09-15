@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const CreateEvent = (props) => {
-  const { setCreateEvent } = props;
+  const { setCreateEvent, getAll } = props;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -65,6 +65,7 @@ const CreateEvent = (props) => {
         description: "",
       });
     }
+    getAll();
   };
 
   return (
@@ -124,5 +125,6 @@ const CreateEvent = (props) => {
 
 CreateEvent.propTypes = {
   setCreateEvent: PropTypes.func,
+  getAll: PropTypes.any,
 };
 export default CreateEvent;

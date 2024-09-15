@@ -52,7 +52,7 @@ export const getAllEvents = createAsyncThunk(
     // call getNameEvents API here..
     try {
       const response = await axiosEventInstance.get(
-        CONSTANTS.GET_ALL_EVENT_ENDPOINT //need to add
+        CONSTANTS.GET_ALL_EVENT_ENDPOINT
 
         // {
         //   params: params,

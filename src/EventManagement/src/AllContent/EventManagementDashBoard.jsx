@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useCallback } from "react";
+import PropTypes from "prop-types";
 import Modal from "./Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -7,9 +7,11 @@ import { deleteEvent, getAllEvents } from "./eventSlice";
 import CreateEvent from "./CreateEvent";
 // import { getAllEvents } from "./eventSlice";
 
-const EventManagementDashBoard = ({ admin, participant }) => {
+const EventManagementDashBoard = (props) => {
+  const { admin, participant } = props;
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const { allEventData, status } = useSelector((state) => state.event);
   //   const location = useLocation();
   // const [adminFlow, setAdminFlow] = useState(admin);
@@ -17,22 +19,6 @@ const EventManagementDashBoard = ({ admin, participant }) => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
-
-  // useEffect(() => {
-  //   setAdminFlow(admin);
-  // }, [admin]);
-
-  //console.log(adminFlow);
-
-  // useEffect(() => {
-  //   // Access the state passed from the LoginPage
-  //   const state = location.state || {};
-  //   console.log("Received location state:", state);
-
-  //   if (state.adminFlow !== undefined) {
-  //     setAdminFlow(state.adminFlow);
-  //   }
-  // }, [location.state]);
 
   const handleDeleteEvent = async (name) => {
     const result = await dispatch(
@@ -130,7 +116,7 @@ const EventManagementDashBoard = ({ admin, participant }) => {
     setCreateEvent(true);
   };
   if (createEvent) {
-    return <CreateEvent setCreateEvent={setCreateEvent} />;
+    return <CreateEvent setCreateEvent={setCreateEvent} getAll={getAll} />;
   }
 
   return (
@@ -280,6 +266,11 @@ const EventManagementDashBoard = ({ admin, participant }) => {
       </div>
     </div>
   );
+};
+
+EventManagementDashBoard.propTypes = {
+  admin: PropTypes.bool,
+  participant: PropTypes.bool,
 };
 
 export default EventManagementDashBoard;

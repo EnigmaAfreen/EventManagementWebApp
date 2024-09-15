@@ -54,10 +54,10 @@ const LoginPage = () => {
   };
 
   if (admin) {
-    return <EventManagementDashBoard admin={"true"} />;
+    return <EventManagementDashBoard admin={admin} />;
   }
   if (participant) {
-    return <EventManagementDashBoard participant={"true"} />;
+    return <EventManagementDashBoard participant={participant} />;
   }
 
   // Example condition for admin flow

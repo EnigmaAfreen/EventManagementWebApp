@@ -27,7 +27,7 @@ public class EventParticipantController {
 
 }
 
-    @GetMapping()
+    @GetMapping("/getall")
     public List<EventParticipant> getAllEventParticipantDetails(){
 
         return eventParticipantService.getAllParticipant();
